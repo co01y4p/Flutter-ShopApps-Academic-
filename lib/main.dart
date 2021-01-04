@@ -9,7 +9,6 @@ import 'package:shop_apps/screens/products_overview_screen.dart';
 import 'package:shop_apps/screens/users_products_screen.dart';
 import 'package:shop_apps/providers/products_provider.dart';
 import 'screens/edit_products_screen.dart';
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
