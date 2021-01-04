@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:shop_apps/providers/product.dart';
 
 class ProductsProvider with ChangeNotifier {
-   List<Product> _items = [
+  List<Product> _items = [
     //   Product(
     //     id: 'p1',
     //     title: 'Red Shirt',
@@ -73,7 +74,7 @@ class ProductsProvider with ChangeNotifier {
           isFavourite: prodData['isFavorite'],
         ));
       });
-      _items=loadedProducts;
+      _items = loadedProducts;
       notifyListeners();
     } catch (error) {
       throw (error);
@@ -110,18 +111,37 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-  void updateProduct(String id, Product newProduct) {
+  Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
+      final url = 'https://shop-apps-4c62d.firebaseio.com/products/$id.json';
+      await http.patch(url,
+          body: json.encode({
+            'title': newProduct.title,
+            'description': newProduct.description,
+            'imageUrl': newProduct.imageURL,
+            'price': newProduct.price
+          }));
       _items[prodIndex] = newProduct;
+
       notifyListeners();
     } else {
       print('...');
     }
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((prod) => prod.id == id);
+  Future<void> deleteProduct(String id) async {
+    final url = 'https://shop-apps-4c62d.firebaseio.com/products/$id.json';
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    var existingProduct = _items[existingProductIndex];
+    _items.removeAt(existingProductIndex);
     notifyListeners();
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+      throw HttpException('Could not delete product.');
+    }
+    existingProduct = null;
   }
 }
