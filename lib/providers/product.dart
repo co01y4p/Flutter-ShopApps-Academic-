@@ -34,7 +34,9 @@ class Product with ChangeNotifier {
       final response = await http.patch(
         url,
         body: json.encode(
-          {'isFavorite': isFavourite},
+          {
+            'isFavorite': isFavourite,
+          },
         ),
       );
       if (response.statusCode >= 400) {
