@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:shop_apps/providers/product.dart';
+import 'package:shop_apps/models/http_exception.dart';
 
 class ProductsProvider with ChangeNotifier {
   List<Product> _items = [
@@ -137,11 +138,14 @@ class ProductsProvider with ChangeNotifier {
     _items.removeAt(existingProductIndex);
     notifyListeners();
     final response = await http.delete(url);
+    _items.removeAt(existingProductIndex);
+    notifyListeners();
     if (response.statusCode >= 400) {
       _items.insert(existingProductIndex, existingProduct);
       notifyListeners();
       throw HttpException('Could not delete product.');
     }
     existingProduct = null;
+
   }
 }
