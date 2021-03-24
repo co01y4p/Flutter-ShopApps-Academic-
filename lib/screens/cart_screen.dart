@@ -39,22 +39,7 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  FlatButton(
-                    onPressed: () {
-                      Provider.of<Order>(
-                        context,
-                        listen: false,
-                      ).addOrder(
-                        cart.items.values.toList(),
-                        cart.totalAmt,
-                      );
-                      cart.clearCart();
-                    },
-                    child: Text(
-                      'Order Now',
-                    ),
-                    textColor: Theme.of(context).primaryColor,
-                  ),
+                  OrderButton(cart: cart),
                 ],
               ),
             ),
@@ -76,6 +61,37 @@ class CartScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class OrderButton extends StatelessWidget {
+  const OrderButton({
+    Key key,
+    @required this.cart,
+  }) : super(key: key);
+
+  final Cart cart;
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(   //flutter auto disable button when onpress no func
+      onPressed: cart.totalAmt <= 0
+          ? null
+          : () {
+              Provider.of<Order>(
+                context,
+                listen: false,
+              ).addOrder(
+                cart.items.values.toList(),
+                cart.totalAmt,
+              );
+              cart.clearCart();
+            },
+      child: Text(
+        'Order Now',
+      ),
+      textColor: Theme.of(context).primaryColor,
     );
   }
 }
