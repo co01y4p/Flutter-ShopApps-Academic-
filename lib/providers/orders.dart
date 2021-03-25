@@ -24,6 +24,7 @@ class Order with ChangeNotifier {
     return [..._orders];
   }
 
+  //fetch orders from server
   Future<void> fetchAndSetOrders() async {
     const url = 'https://shop-apps-4c62d.firebaseio.com/orders.json';
     final response = await http.get(url);
@@ -43,7 +44,7 @@ class Order with ChangeNotifier {
                 price: item['price'],
                 quantity: item['quantity'],
               ),
-            ),
+            ).toList(),
           ),
         );
       },
@@ -52,6 +53,7 @@ class Order with ChangeNotifier {
     notifyListeners();
   }
 
+  //add order to server
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     const url = 'https://shop-apps-4c62d.firebaseio.com/orders.json';
     final timestamp = DateTime.now();
