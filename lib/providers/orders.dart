@@ -30,6 +30,9 @@ class Order with ChangeNotifier {
     final response = await http.get(url);
     final List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    if(extractedData==null){
+      return;
+    }
     extractedData.forEach(
       (orderID, orderData) {
         loadedOrders.add(
@@ -49,7 +52,7 @@ class Order with ChangeNotifier {
         );
       },
     );
-    _orders=loadedOrders;
+    _orders=loadedOrders.reversed.toList();
     notifyListeners();
   }
 
