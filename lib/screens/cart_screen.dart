@@ -65,31 +65,48 @@ class CartScreen extends StatelessWidget {
   }
 }
 
-class OrderButton extends StatelessWidget {
+class OrderButton extends StatefulWidget {
   const OrderButton({
     Key key,
     @required this.cart,
   }) : super(key: key);
 
   final Cart cart;
+
+  @override
+  _OrderButtonState createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
-    return FlatButton(   //flutter auto disable button when onpress no func
-      onPressed: cart.totalAmt <= 0
+    return FlatButton(
+      //flutter auto disable button when onpress no func
+      onPressed: (widget.cart.totalAmt <= 0 || _isLoading)
           ? null
-          : () {
-              Provider.of<Order>(
+          : () async {
+              setState(() {
+                _isLoading = true;
+              });
+              await Provider.of<Order>(
                 context,
                 listen: false,
               ).addOrder(
-                cart.items.values.toList(),
-                cart.totalAmt,
+                widget.cart.items.values.toList(),
+                widget.cart.totalAmt,
               );
-              cart.clearCart();
+              setState(() {
+                _isLoading = false;
+              });
+              widget.cart.clearCart();
             },
-      child: Text(
-        'Order Now',
-      ),
+      child: _isLoading
+          ? CircularProgressIndicator()
+          : Text(
+              'Order Now',
+            ),
       textColor: Theme.of(context).primaryColor,
     );
   }

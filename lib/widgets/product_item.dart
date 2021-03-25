@@ -64,7 +64,7 @@ class ProductItem extends StatelessWidget {
               Scaffold.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    'Added item to cart!',
+                    'Added ${product.title} to cart!',
                   ),
                   duration: Duration(seconds: 2),
                   action: SnackBarAction(
