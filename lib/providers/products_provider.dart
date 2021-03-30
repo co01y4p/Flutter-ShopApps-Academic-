@@ -42,6 +42,9 @@ class ProductsProvider with ChangeNotifier {
     //   ),
   ];
 
+  final String authToken;
+  ProductsProvider(this.authToken);
+
   List<Product> get items {
     //so here is get a copy from pure text, to be used here???
     return [..._items];
@@ -60,7 +63,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProduct() async {
-    const url = 'https://shop-apps-4c62d.firebaseio.com/products.json';
+    const url = 'https://shop-apps-4c62d.firebaseio.com/products.json?auth=';
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -86,7 +89,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    const url = 'https://shop-apps-4c62d.firebaseio.com/products.json';
+    final url = 'https://shop-apps-4c62d.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.post(
         url,
