@@ -41,13 +41,14 @@ class Cart with ChangeNotifier {
   ) {
     if (_items.containsKey(productID)) {
       _items.update(
-          productID,
-          (existingItem) => CartItem(
-                id: existingItem.id,
-                title: existingItem.title,
-                quantity: existingItem.quantity + 1,
-                price: existingItem.price,
-              ));
+        productID,
+        (existingItem) => CartItem(
+          id: existingItem.id,
+          title: existingItem.title,
+          quantity: existingItem.quantity + 1,
+          price: existingItem.price,
+        ),
+      );
     } else {
       _items.putIfAbsent(
         productID,
