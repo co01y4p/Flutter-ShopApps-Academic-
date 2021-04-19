@@ -41,6 +41,8 @@ class Product with ChangeNotifier {
       if (response.statusCode >= 400) {
         _savFavValue(oldStatus);
       }
-    } catch (error) {}
+    } catch (error) {
+      _savFavValue(oldStatus);
+    }
   }
 }
